@@ -1,5 +1,8 @@
+import React from "react"
+import { AxelerantName } from "./AxelerantName"
+
 function App() {
-  return "Hello World"
+  return <AxelerantName />
 }
 
 export default App
