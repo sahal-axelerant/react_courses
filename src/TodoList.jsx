@@ -1,10 +1,10 @@
-export function TodoList() {
+export function TodoList(props) {
   return (
     <ul>
-      <li>Item 1</li>
-      <li>Item 2</li>
-      <li>Item 3</li>
-      <li>Item 4</li>
+      <li>{props.items[0]}</li>
+      <li>{props.items[1]}</li>
+      <li>{props.items[2]}</li>
+      <li>{props.items[3]}</li>
     </ul>
   )
 }
