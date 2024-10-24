@@ -1,12 +1,25 @@
-import { useState } from "react"
+import React from "react"
 
-export function Counter() {
-    const [count, setCount] = useState(0)
-  
-    function incrementCount() {
-      setCount((currentCount) => {
-        return currentCount + 1
-      })
+export class Counter extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      count: 0,
     }
-    return <h1 onClick={incrementCount}>{count}</h1>
+  }
+  render() {
+    const incrementCount = () => {
+      this.setState({ count: this.state.count + 1 })
+    }
+    const resetCount = () => {
+      this.setState({ count: 0 })
+    }
+    return (
+      <div>
+        <h1>{this.state.count}</h1>{" "}
+        <button onClick={incrementCount}>Count</button>
+        <button onClick={resetCount}>Reset</button>
+      </div>
+    )
+  }
 }
