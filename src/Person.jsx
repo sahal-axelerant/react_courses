@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import { useState } from "react"
 
 export function Person() {
@@ -9,6 +10,10 @@ export function Person() {
   function incrementAge() {
     setAge((current) => current + 1)
   }
+
+  useEffect(() => {
+    console.log("Age is changed", age)
+  }, [age])
   return (
     <div>
       <div>
