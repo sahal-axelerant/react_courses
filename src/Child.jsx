@@ -1,56 +1,60 @@
+import React from "react"
 import { useEffect } from "react"
 import { useState } from "react"
+import { render } from "react-dom"
 
-export function Child() {
-  const [age, setAge] = useState(0)
-  const [name, setName] = useState("")
+export class Child extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = { name: "", age: 0 }
+  }
 
-  useEffect(() => {
+  componentDidMount() {
     console.log("Render")
-  })
-
-  useEffect(() => {
     console.log("Hi")
-  }, [])
-
-  useEffect(() => {
-    console.log(`My name is ${name} and I am ${age} years old`)
-  }, [name, age])
-
-  useEffect(() => {
-    document.title = name
-  }, [name])
-
-  useEffect(() => {
-    return () => {
-      console.log("Bye")
+  }
+  componentDidUpdate(prevProps, prevState) {
+    console.log("Render")
+    if (this.state.name != prevState.name || this.state.age != prevState.age) {
+      console.log(
+        `My name is ${this.state.name} and I am ${this.state.age} years old`
+      )
     }
-  }, [])
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      console.log(`My name is ${name}`)
-    }, 1000)
-    return () => {
-      clearTimeout(timeout)
+    if (this.state.name != prevState.name) {
+      document.title = this.state.name
+      clearTimeout(this.nameTimeout)
+      this.nameTimeout = setTimeout(() => {
+        console.log(`My name is ${this.state.name}`)
+      }, 1000)
     }
-  }, [name])
+  }
 
-  return (
-    <div>
-      <input
-        type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-      <br />
-      <br />
-      <button onClick={() => setAge((a) => a - 1)}>-</button>
-      {age}
-      <button onClick={() => setAge((a) => a + 1)}>+</button>
-      <br />
-      <br />
-      My name is {name} and I am {age} years old.
-    </div>
-  )
+  componentWillUnmount() {
+    console.log("Bye")
+    if (this.nameTimeout !== null) clearTimeout(this.nameTimeout)
+  }
+
+  render() {
+    return (
+      <div>
+        <input
+          type="text"
+          value={this.state.name}
+          onChange={(e) => this.setState({ name: e.target.value })}
+        />
+        <br />
+        <br />
+        <button onClick={() => this.setState({ age: this.state.age - 1 })}>
+          -
+        </button>
+        {this.state.age}
+        <button onClick={() => this.setState({ age: this.state.age + 1 })}>
+          +
+        </button>
+        <br />
+        <br />
+        My name is {this.state.name} and I am {this.state.age} years old.
+      </div>
+    )
+  }
 }
