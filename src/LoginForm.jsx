@@ -1,26 +1,25 @@
 import { useMemo } from "react"
+import { useRef } from "react"
 import { useState } from "react"
 import { checkEmail, checkPassword } from "./Validators"
 
 export function LoginForm() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
   const [isFirstSubmitDone, setIsFirstSubmitDone] = useState(false)
-
-  const emailErrors = useMemo(() => {
-    return isFirstSubmitDone ? checkEmail(email) : []
-  }, [email])
-  const passwordErrors = useMemo(() => {
-    return isFirstSubmitDone ? checkPassword(password) : []
-  }, [password])
+  const [emailErrors, setEmailErrors] = useState([])
+  const [passwordErrors, setPasswordErrors] = useState([])
+  const email = useRef()
+  const password = useRef()
 
   function handleFormSubmit(e) {
     e.preventDefault()
     setIsFirstSubmitDone(true)
-    const emailResults = checkEmail(email)
-    const passwordResults = checkPassword(password)
+    const emailResults = checkEmail(email.current.value)
+    const passwordResults = checkPassword(password.current.value)
     if (emailResults.length === 0 && passwordResults.length === 0) {
       alert("Success")
+    } else {
+      setEmailErrors(emailResults)
+      setPasswordErrors(passwordResults)
     }
   }
   return (
@@ -33,8 +32,12 @@ export function LoginForm() {
           className="input"
           type="email"
           id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          ref={email}
+          onChange={(e) =>
+            isFirstSubmitDone
+              ? setEmailErrors(checkEmail(email.current.value))
+              : undefined
+          }
         />
         {emailErrors.length > 0 && (
           <div className="msg">{emailErrors.join(", ")}</div>
@@ -46,10 +49,14 @@ export function LoginForm() {
         </label>
         <input
           className="input"
-          value={password}
           type="text"
           id="password"
-          onChange={(e) => setPassword(e.target.value)}
+          ref={password}
+          onChange={(e) =>
+            isFirstSubmitDone
+              ? setPasswordErrors(checkPassword(password.current.value))
+              : undefined
+          }
         />
         {passwordErrors.length > 0 && (
           <div className="msg">{passwordErrors.join(", ")}</div>
